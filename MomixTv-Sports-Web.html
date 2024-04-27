@@ -1,0 +1,811 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOMIXTV SPORTS WEB</title>
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>
+
+    <style>
+        /* Add loading screen styles */
+
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #333;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 9999;
+        }
+
+        #loading-msg {
+            margin-bottom: 10px;
+        }
+
+        #loading-bar-container {
+            width: 80%;
+            background-color: #555;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #loading-bar {
+            height: 20px;
+            width: 0;
+            background-color: #3498db;
+            transition: width 0.3s ease-in-out;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #333;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #222;
+            color: #ffffff;
+            padding: 1em 0;
+            box-sizing: border-box;
+            font-size: 2em;
+            border-bottom: 2px solid #444;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        nav {
+            margin-bottom: 20px;
+            text-align: center;
+            /* Center-align the text in the navigation */
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #3498db;
+            border-radius: 20px;
+            /* Add border-radius to the dropdown */
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s ease;
+            text-align-last: center;
+            /* Center-align text within the select element */
+        }
+
+        select:hover,
+        select:focus {
+            border-color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .site-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            /* Adjusted grid size */
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .site-card {
+            background-color: #444;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+            text-decoration: none;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            max-width: 150px;
+            /* Set a maximum width for the site card */
+            margin: auto;
+            /* Center the site card within its container */
+        }
+
+        .site-card:hover {
+            transform: scale(1.05);
+        }
+
+        .site-card img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-bottom: 1px solid #333;
+        }
+
+        .site-info {
+            padding: 10px;
+            /* Reduce padding for the site info */
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .site-info h2 {
+            font-size: 0.9em;
+            /* Adjust the font size for the channel name (h2) */
+            margin: 0;
+        }
+
+        .site-link {
+            margin-top: 10px;
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #3498db;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .site-link:hover {
+            background-color: #2c3e50;
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .github-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .github-button:hover {
+            background-color: #45a049;
+        }
+
+        .github-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .telegram-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+            background-color: #0088cc;
+            /* Use the color you prefer for Telegram */
+            border-radius: 5px;
+            margin-left: 10px;
+            /* Adjust the margin as needed */
+            transition: background-color 0.3s ease;
+        }
+
+        .telegram-button:hover {
+            background-color: #006699;
+            /* Adjust the hover color as needed */
+        }
+
+        .telegram-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        /* Modern Search Bar Styles */
+
+        .search-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 70%;
+            /* Adjusted width for better visibility on small screens */
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            /* Add border-radius for a curved end */
+        }
+
+        #channel-search {
+            padding: 10px;
+            border: none;
+            /* Remove border to create a seamless appearance */
+            border-radius: 20px;
+            /* Match the border-radius of the container */
+            width: 70%;
+            /* Adjusted width for better visibility on small screens */
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #channel-search:focus {
+            outline: none;
+            background-color: #eee;
+            /* Change background color when focused */
+        }
+
+        #search-btn {
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 20px;
+            /* Add border-radius to the search button */
+            padding: 10px 20px;
+            /* Add padding to the search button */
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #search-btn:hover {
+            background-color: #2c3e50;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-icon {
+            font-size: 20px;
+            color: #3498db;
+            transition: color 0.3s ease;
+        }
+
+        /* Media Query for Small Screens */
+
+        @media only screen and (max-width: 600px) {
+            .site-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            #channel-search {
+                width: 60%;
+                /* Adjusted width for small screens */
+            }
+            #search-btn {
+                width: 30%;
+                /* Adjusted width for small screens */
+            }
+            #search-bar {
+                align-items: stretch;
+                /* Align items vertically to stretch the search bar */
+            }
+            #channel-search {
+                width: 60%;
+                /* Make the input full width */
+                margin-bottom: 0;
+                /* Remove margin at the bottom */
+            }
+        }
+    </style>
+</head>
+  
+<body>
+    <!-- Loading screen with progress bar and message -->
+    <div id="loading-screen">
+        <div id="loading-msg">Loading, please wait...</div>
+        <div id="loading-bar-container">
+            <div id="loading-bar"></div>
+        </div>
+    </div>
+    <header>
+        <h1>MOMIXTV SPORTS WEB</h1>
+        <a href="https://t.me/momixtv" class="telegram-button" target="_blank">
+          <img src="https://cdn.jsdelivr.net/gh/KratosRepo/picx-images-hosting@master/20240104/Telegram_logo.svg.4prhaum59ki0.webp" alt="Telegram" class="telegram-icon">
+          Join us on Telegram
+      </a>
+     </header>
+
+    <div class="container">
+
+        <div id="search-bar">
+            <input type="text" id="channel-search" oninput="searchChannels()" placeholder="Enter channel name...">
+            <button id="search-btn" onclick="searchChannels()">Search</button>
+        </div>
+        <div class="site-grid" id="Sports">
+
+<a href="https://momixtv.github.io/iplspecialmatch1" class="site-card">
+                    <img src="https://i.postimg.cc/0NnT5N14/ipl-theme-song-2024-version-v0-NXdzc-Gxha2hy-Ym5j-MTYrq9-G4e-PXmlj49-V87s-AEq-K5u-Hy-DYCMQOEprw7a-J-S-ezgif-co.jpg" alt="IPL Sepecial">
+                    <div class="site-info">
+                        <h2>IPL Sepecial</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/Star1Hindi/" class="site-card">
+                    <img src="https://i.postimg.cc/59K1xvFf/sk-ssh1.png" alt="Star 1 Hindi">
+                    <div class="site-info">
+                        <h2>Star 1 Hindi</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/Star1HD/" class="site-card">
+                    <img src="https://i.postimg.cc/fJkJMwPz/sk-ss1hd.png" alt="Star 1 HD">
+                    <div class="site-info">
+                        <h2>Star 1 HD</h2>
+                    </div>
+                </a>
+
+<a href="https://vkplay.live/app/embed/tultra5" class="site-card">
+                    <img src="https://i.postimg.cc/3xnjKgsQ/SS1-TAMHD-Thumbnail-ezgif-com-webp-to-png-converter.png" alt="Star Tamil HD">
+                    <div class="site-info">
+                        <h2>Star Tamil HD</h2>
+                    </div>
+                </a>
+    
+<a href="https://momixtv.github.io/Star2HD/" class="site-card">
+                    <img src="https://i.postimg.cc/9zLD34Jg/sk-ss2hd.png" alt="Star 2 HD">
+                    <div class="site-info">
+                        <h2>Star 2 HD</h2>
+                    </div>
+                </a>
+    
+<a href="https://momixtv.github.io/StarSelect1/" class="site-card">
+                    <img src="https://i.postimg.cc/QKdV9sxq/sk-sss1hd.png" alt="Star Select 1 HD">
+                    <div class="site-info">
+                        <h2>Star Select 1 HD</h2>
+                    </div>
+                </a>
+        
+<a href="https://momixtv.github.io/StarSelect2/" class="site-card">
+                    <img src="https://i.postimg.cc/hzrfthgj/sk-sss2hd.png" alt="Star Select 2 HD">
+                    <div class="site-info">
+                        <h2>Star Select 2 HD</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/SonyTen1/" class="site-card">
+                    <img src="https://i.postimg.cc/PphCHYg9/sk-ten1.png" alt="SonyTen 1 HD">
+                    <div class="site-info">
+                        <h2>SonyTen 1 HD</h2>
+                    </div>
+                </a>
+    
+<a href="https://momixtv.github.io/SonyTen2/" class="site-card">
+                    <img src="https://i.postimg.cc/JyjsSP2j/sk-ten2.png" alt="SonyTen 2 HD">
+                    <div class="site-info">
+                        <h2>SonyTen 2 HD</h2>
+                    </div>
+                </a>
+    
+<a href="https://momixtv.github.io/SonyTen3/" class="site-card">
+                    <img src="https://i.postimg.cc/Yv54XJbp/sk-ten3.png" alt="SonyTen 3 HD">
+                    <div class="site-info">
+                        <h2>SonyTen 3 HD</h2>
+                    </div>
+                </a>
+    
+<a href="https://momixtv.github.io/SonyTen5/" class="site-card">
+                    <img src="https://i.postimg.cc/pmhhJ2QG/sk-ten5.png" alt="SonyTen 5 HD">
+                    <div class="site-info">
+                        <h2>SonyTen 5 HD</h2>
+                    </div>
+                </a>
+    
+<a href="https://momixtv.github.io/Sports18HD/" class="site-card">
+                    <img src="https://i.postimg.cc/8cpCqV3w/sk-sports18.png" alt="Sports 18-1 HD">
+                    <div class="site-info">
+                        <h2>Sports 18-1 HD</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/Sports18Khel/" class="site-card">
+                    <img src="https://i.postimg.cc/tTtTSgrY/sk-sports18khel.png" alt="Sports 18 Khel">
+                    <div class="site-info">
+                        <h2>Sports 18 Khel</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/Eurosports/" class="site-card">
+                    <img src="https://i.postimg.cc/BvyQHRQb/sk-eurosports.png" alt="Eurosports HD">
+                    <div class="site-info">
+                        <h2>Eurosports HD</h2>
+                    </div>
+                </a>
+                
+<a href="https://momixtv.github.io/thepapare/" class="site-card">
+                    <img src="https://i.postimg.cc/sDxgCfnP/sk-thepapare.png" alt="The Papare TV">
+                    <div class="site-info">
+                        <h2>The Papare TV</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/TenCricket/" class="site-card">
+                    <img src="https://i.postimg.cc/0jd7TqDz/sk-tencricket.png" alt="Ten Cricket">
+                    <div class="site-info">
+                        <h2>Ten Cricket</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/WillowHD/" class="site-card">
+                    <img src="https://i.postimg.cc/prYtBnZY/sk-willow.png" alt="Willow HD">
+                    <div class="site-info">
+                        <h2>Willow HD</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroCric/" class="site-card">
+                    <img src="https://i.postimg.cc/v8hC8McK/sk-astrocricket.png" alt="Astro Cricket">
+                    <div class="site-info">
+                        <h2>Astro Cricket</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroSuper1/" class="site-card">
+                    <img src="https://i.postimg.cc/3NQyQ4d6/sk-astro1.png" alt="Astro SuperSports 1">
+                    <div class="site-info">
+                        <h2>Astro Super 1</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroSuper2/" class="site-card">
+                    <img src="https://i.postimg.cc/PxwL7zrY/sk-astro2.png" alt="Astro SuperSports 2">
+                    <div class="site-info">
+                        <h2>Astro Super 2</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroSuper3/" class="site-card">
+                    <img src="https://i.postimg.cc/9fSR1NVc/sk-astro3.png" alt="Astro SuperSports 3">
+                    <div class="site-info">
+                        <h2>Astro Super 3</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroSuper4/" class="site-card">
+                    <img src="https://i.postimg.cc/pLWFdFqM/sk-astro4.png" alt="Astro SuperSports 4">
+                    <div class="site-info">
+                        <h2>Astro Super 4</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroArena1/" class="site-card">
+                    <img src="https://i.postimg.cc/BZ1fZzbS/Astro-Arena.png" alt="Astro Arena 1">
+                    <div class="site-info">
+                        <h2>Astro Arena 1</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroArena2/" class="site-card">
+                    <img src="https://i.postimg.cc/c13PG8k6/Astro-Arena-2.png" alt="Astro Arena 2">
+                    <div class="site-info">
+                        <h2>Astro Arena 2</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroArenaBola1/" class="site-card">
+                    <img src="https://i.postimg.cc/mrGtV9nM/Astro-Arena-Bola.png" alt="Astro Bola 1">
+                    <div class="site-info">
+                        <h2>Astro Bola 1</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/AstroArenaBola2/" class="site-card">
+                    <img src="https://i.postimg.cc/1zxNT288/Astro-Arena-Bola-2.png" alt="Astro Bola 2">
+                    <div class="site-info">
+                        <h2>Astro Bola 2</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/TNT1/" class="site-card">
+                    <img src="https://i.postimg.cc/1RvRf2bh/sk-tnt1.png" alt="TNT Sports 1">
+                    <div class="site-info">
+                        <h2>TNT Sports 1</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/TNT2/" class="site-card">
+                    <img src="https://i.postimg.cc/W3nNmH3Z/sk-tnt2.png" alt="TNT Sports 2">
+                    <div class="site-info">
+                        <h2>TNT Sports 2</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/TNT3/" class="site-card">
+                    <img src="https://i.postimg.cc/vT2Gkx5H/sk-tnt3.png" alt="TNT Sports 3">
+                    <div class="site-info">
+                        <h2>TNT Sports 3</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/TNT4/" class="site-card">
+                    <img src="https://i.postimg.cc/C5xFcsBQ/sk-tnt4.png" alt="TNT Sports 4">
+                    <div class="site-info">
+                        <h2>TNT Sports 4</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/TNT5/" class="site-card">
+                    <img src="https://i.postimg.cc/B6Ycbd5Y/sk-tnt5.png" alt="TNT Sports 5">
+                    <div class="site-info">
+                        <h2>TNT Sports 5</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/SkyCric/" class="site-card">
+                    <img src="https://i.postimg.cc/HkqkTMRr/sk-skycri1.png" alt="Sky Cricket">
+                    <div class="site-info">
+                        <h2>Sky Cricket</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skymain/" class="site-card">
+                    <img src="https://i.postimg.cc/3R7rvTK7/sk-skymain.png" alt="Sky Main Event">
+                    <div class="site-info">
+                        <h2>Sky Main Event</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skyfootball/" class="site-card">
+                    <img src="https://i.postimg.cc/gkB0BQKq/sk-skyfootb.png" alt="Sky Football">
+                    <div class="site-info">
+                        <h2>Sky Football</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skyEPL/" class="site-card">
+                    <img src="https://i.postimg.cc/KYtvjzhJ/sk-skyepl1.png" alt="Sky EPL">
+                    <div class="site-info">
+                        <h2>Sky EPL</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skymix/" class="site-card">
+                    <img src="https://i.postimg.cc/Y0dS7sB7/sk-skymix.png" alt="Sky MIX">
+                    <div class="site-info">
+                        <h2>Sky MIX</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skyF1/" class="site-card">
+                    <img src="https://i.postimg.cc/pXdTCRKL/sk-skyf11.png" alt="Sky F1">
+                    <div class="site-info">
+                        <h2>Sky F1</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skyarena/" class="site-card">
+                    <img src="https://i.postimg.cc/mDxwDxCy/sk-skyarena.png" alt="Sky Arena">
+                    <div class="site-info">
+                        <h2>Sky Arena</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skyaction/" class="site-card">
+                    <img src="https://i.postimg.cc/cCkft7W7/sk-skyaction.png" alt="Sky Action">
+                    <div class="site-info">
+                        <h2>Sky Action</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skyuno/" class="site-card">
+                    <img src="https://i.postimg.cc/8PyFFfYc/sk-skyuno.png" alt="Sky UNO">
+                    <div class="site-info">
+                        <h2>Sky UNO</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skytennis/" class="site-card">
+                    <img src="https://i.postimg.cc/gj2v0SCk/sk-skytennis.png" alt="Sky Tennis">
+                    <div class="site-info">
+                        <h2>Sky Tennis</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/skygolf/" class="site-card">
+                    <img src="https://i.postimg.cc/P5pqGy3G/sk-skygolf1.png" alt="Sky Golf">
+                    <div class="site-info">
+                        <h2>Sky Golf</h2>
+                    </div>
+                </a>
+
+
+<a href="https://momixtv.github.io/skymotogp/" class="site-card">
+                    <img src="https://i.postimg.cc/Y2R0QhGP/sk-skymotogp.png" alt="Sky MotoGP">
+                    <div class="site-info">
+                        <h2>Sky MotoGP</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/usanetwork/" class="site-card">
+                    <img src="https://i.postimg.cc/FzbYrrSK/sk-usanetwork.png" alt="USA Network">
+                    <div class="site-info">
+                        <h2>USA Network</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/bein1/" class="site-card">
+                    <img src="https://i.postimg.cc/dt7dgd80/sk-bein1-th.png" alt="Bein Sports 1">
+                    <div class="site-info">
+                        <h2>Bein Sports 1</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/bein2/" class="site-card">
+                    <img src="https://i.postimg.cc/3JPphRBF/sk-bein2-th.png" alt="Bein Sports 2">
+                    <div class="site-info">
+                        <h2>Bein Sports 2</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/bein3/" class="site-card">
+                    <img src="https://i.postimg.cc/VsZn740T/sk-bein3-th.png" alt="Bein Sports 3">
+                    <div class="site-info">
+                        <h2>Bein Sports 3</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/ssc1hd/" class="site-card">
+                    <img src="https://i.postimg.cc/9ftJNPYB/sk-ssc1.png" alt="SSC 1 HD">
+                    <div class="site-info">
+                        <h2>SSC 1 HD</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/ssc2hd/" class="site-card">
+                    <img src="https://i.postimg.cc/7hcVTKqq/sk-ssc2.png" alt="SSC 2 HD">
+                    <div class="site-info">
+                        <h2>SSC 2 HD</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/ssc3hd/" class="site-card">
+                    <img src="https://i.postimg.cc/1X4BtkhW/sk-ssc3.png" alt="SSC 3 HD">
+                    <div class="site-info">
+                        <h2>SSC 3 HD</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/ssc4hd/" class="site-card">
+                    <img src="https://i.postimg.cc/rpLfJZxm/sk-ssc4.png" alt="SSC 4 HD">
+                    <div class="site-info">
+                        <h2>SSC 4 HD</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/ssc5hd/" class="site-card">
+                    <img src="https://i.postimg.cc/vB0XGQjg/sk-ssc5.png" alt="SSC 5 HD">
+                    <div class="site-info">
+                        <h2>SSC 5 HD</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/sscextra1/" class="site-card">
+                    <img src="https://i.postimg.cc/Z5Nf6z92/sk-ssce1.png" alt="SSC Extra 1">
+                    <div class="site-info">
+                        <h2>SSC Extra 1</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/sscextra2/" class="site-card">
+                    <img src="https://i.postimg.cc/sDBg225h/sk-ssce2.png" alt="SSC Extra 2">
+                    <div class="site-info">
+                        <h2>SSC Extra 2</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/sscextra3/" class="site-card">
+                    <img src="https://i.postimg.cc/wx4BHNRz/sk-ssce3.png" alt="SSC Extra 3">
+                    <div class="site-info">
+                        <h2>SSC Extra 3</h2>
+                    </div>
+                </a>
+
+<a href="https://momixtv.github.io/wwenetwork/" class="site-card">
+                    <img src="https://i.postimg.cc/QCxJYwH2/WWE-Network-logo.jpg" alt="WWE Network">
+                    <div class="site-info">
+                        <h2>WWE Network</h2>
+                    </div>
+                </a>
+                    
+        </div>
+        <div class="site-grid" id="Sports">
+
+
+
+        <!-- add here -->
+
+        <script>
+            // Function to store the selected group in localStorage
+            function saveSelectedGroup(selectedGroup) {
+                localStorage.setItem('selectedGroup', selectedGroup);
+            }
+
+            // Function to retrieve the stored selected group from localStorage
+            function getStoredSelectedGroup() {
+                return localStorage.getItem('selectedGroup');
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                // Show loading screen
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.display = 'flex';
+
+                // Update the progress bar width
+                const loadingBar = document.getElementById('loading-bar');
+                loadingBar.style.width = '100%';
+
+                // Hide loading screen after a delay (adjust as needed)
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                }, 1000); // 1000 milliseconds = 1 second
+
+                // Check if there is a stored selected group
+                const storedSelectedGroup = getStoredSelectedGroup();
+                if (storedSelectedGroup) {
+                    // Set the selected group in the dropdown
+                    const selectElement = document.getElementById('channel-dropdown');
+                    selectElement.value = storedSelectedGroup;
+
+                    // Trigger the changeChannelGroup function with the stored value
+                    changeChannelGroup();
+                } else {
+                    // Trigger the changeChannelGroup function with the default value
+                    changeChannelGroup();
+                }
+            });
+
+            function searchChannels() {
+                const input = document.getElementById('channel-search').value.toLowerCase();
+                const allSiteCards = document.querySelectorAll('.site-card');
+
+                allSiteCards.forEach(card => {
+                    const channelName = card.querySelector('.site-info h2').innerText.toLowerCase();
+                    const displayStyle = channelName.includes(input) ? 'flex' : 'none';
+                    card.style.display = displayStyle;
+                });
+
+                // Show all genre-specific channel grids
+                const genreGrids = document.querySelectorAll('.site-grid');
+                genreGrids.forEach(grid => {
+                    grid.style.display = 'grid';
+                });
+            }
+
+            function changeChannelGroup() {
+                const selectElement = document.getElementById('channel-dropdown');
+                const selectedGroup = selectElement.options[selectElement.selectedIndex].value;
+
+                // Save the selected group to localStorage
+                saveSelectedGroup(selectedGroup);
+
+                // Hide all genre-specific channel grids
+                const genreGrids = document.querySelectorAll('.site-grid');
+                genreGrids.forEach(grid => {
+                    grid.style.display = 'none';
+                });
+
+                // Show the selected genre-specific channel grid
+                const selectedGrid = document.getElementById(`${selectedGroup}-channels`);
+                if (selectedGrid) {
+                    selectedGrid.style.display = 'grid';
+                }
+            }
+        </script>
+
+</body>
+
+</html>
+<script disable-devtool-auto='true' src=   
+  'https://cdn.jsdelivr.net/npm/disable-devtool' clear-log='true'   
+  disable-select='true' disable-copy='true' disable-cut='true'   
+  disable-paste='true'></script> 
